@@ -4,10 +4,10 @@ import fetch from 'node-fetch'
 let id = 0
 
 
-export default async (user, password) => {
+export default (user, password) => {
   const basicAuth = btoa(`${user}:${password}`)
       
-  return (method, ...params) => {
+  return async (method, ...params) => {
     id += 1
   
     return new Promise(async (resolve, reject) => {
