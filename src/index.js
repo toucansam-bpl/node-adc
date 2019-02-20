@@ -1,4 +1,3 @@
-import creds from '../credentials.json'
 import rpc from './rpc'
 
 
@@ -8,11 +7,11 @@ export default class AdcClient {
   }
   
   async getInfo() {
-    return await this.rpc('getinfo')
+    return this.rpc('getinfo')
   }
   
   async getNewAddress() {
-    return await this.rpc('getnewaddress')
+    return this.rpc('getnewaddress')
   }
 }
 
