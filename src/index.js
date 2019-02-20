@@ -1,18 +1,20 @@
+import btoa from 'btoa'
 import fetch from 'node-fetch'
 
-import credentials from '../credentials.json'
+import creds from '../credentials.json'
+const basicAuth = btoa(`${creds.user}:${creds.password}`)
 
 // curl --user audiocoinrpc --data-binary '{"jsonrpc":"1.0","id":"curltext","method":"getnewaddress","params":[]}'
 // -H 'content-type:text/plain;' http://127.0.0.1:15715
 let id = 0
 
-export default () => {
+export default async () => {
   id += 1
 
   let rpcData = {
     method: 'POST',
-    credentials,
     headers: {
+      Authorization: `Basic ${basicAuth}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

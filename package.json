@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "btoa": "^1.2.1",
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {
