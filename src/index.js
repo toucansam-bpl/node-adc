@@ -5,6 +5,10 @@ export default class AdcClient {
   constructor(username, password) {
     this.rpc = rpc(username, password)
   }
+
+  async getBalance(address) {
+    return this.rpc('getreceivedbyaddress', address)
+  }
   
   async getInfo() {
     return this.rpc('getinfo')
