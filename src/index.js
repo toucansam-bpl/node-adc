@@ -1,5 +1,6 @@
 import rpc from './rpc'
 
+const fee = 0.0001
 
 export default class AdcClient {
   constructor(username, password) {
@@ -24,7 +25,26 @@ export default class AdcClient {
         const allInputs = await this.rpc('listunspent')
         const validInputs = allInputs.filter(t => t.address === tx.from)
 
-        resolve(validInputs)
+        const inputData = validInputs.reduce((all, input) => {
+          if (all.uncoveredAmount > 0) {
+            all.uncoveredAmount -= input.amount
+            all.inputsToUse.push({
+              txid: input.txid,
+              vout: input.vout,
+            })
+          }
+          return all
+        }, {
+          uncoveredAmount: tx.amount + fee,
+          inputsToUse: [],
+        })
+
+        if (inputData.amount <= 0) {
+          resolve(inputData)
+        } else {
+          let balance = validInputs.reduce((sum, input) => sum + input.amount, 0)
+          reject(new Error(`Trying to send ${tx.amount + fee} from Address "${tx.from}" but it only has balance of ${balance}.`))
+        }
       } catch (ex) {
         reject(ex)
       }
