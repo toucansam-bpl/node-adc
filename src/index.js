@@ -22,7 +22,7 @@ export default class AdcClient {
     return new Promise(async (resolve, reject) => {
       try {
         const allInputs = await this.rpc('listunspent')
-        const validInputs = allInputs.filter(t => t.address === t.from)
+        const validInputs = allInputs.result.filter(t => t.address === t.from)
 
         resolve(validInputs)
       } catch (ex) {
