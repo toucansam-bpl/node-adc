@@ -51,13 +51,15 @@ export default class AdcClient {
           [tx.from]: change
         }
         
-        console.log(changeOutput)
         const rawTx = await this.rpc('createrawtransaction', inputData.inputsToUse, {
           ... changeOutput,
           [tx.to]: tx.amount,
         })
 
-        const decoded = await this.rpc('decoderawtransaction', rawTx)
+        const signedTx = await this.rpc('signrawtransaction', rawTx)
+
+        console.log(signedTx)
+        const decoded = await this.rpc('decoderawtransaction', signedTx.hex)
 
         resolve(decoded)
       } catch (ex) {
