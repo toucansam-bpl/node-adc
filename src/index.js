@@ -8,7 +8,15 @@ export default class AdcClient {
   }
 
   async getBalance(address) {
-    return this.rpc('getreceivedbyaddress', address)
+    return new Promise(async (resolve, reject) => {
+      try {
+        const inputs = await this.rpc('listunspent', address)
+        const balance = inputs.reduce((sum, input) => input.address === address ? sum + input.amount : sum, 0)
+        resolve(balance) 
+      } catch(ex) {
+        reject(ex)
+      }
+    })
   }
   
   async getInfo() {
