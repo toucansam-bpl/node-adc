@@ -33,7 +33,6 @@ export default class AdcClient {
               vout: input.vout,
             })
           }
-          console.log(all.uncoveredAmount)
           return all
         }, {
           uncoveredAmount: tx.amount + fee,
@@ -41,12 +40,25 @@ export default class AdcClient {
         })
 
         console.log(inputData.uncoveredAmount)
-        if (inputData.uncoveredAmount <= 0) {
-          resolve(inputData)
-        } else {
+        if (inputData.uncoveredAmount > 0) {
           let balance = validInputs.reduce((sum, input) => sum + input.amount, 0)
-          reject(new Error(`Trying to send ${tx.amount + fee} from Address "${tx.from}" but it only has balance of ${balance}.`))
+          let message = `Trying to send ${tx.amount + fee} from Address "${tx.from}" but it only has balance of ${balance}.`
+          return reject(new Error(message))
         }
+        
+        console.log({
+          [tx.to]: tx.amount,
+          [tx.from]: inputData.uncoveredAmount,
+        })
+
+        const rawTx = await this.rpc('createrawtransaction', all.inputsToUse, {
+          [tx.to]: tx.amount,
+          [tx.from]: inputData.uncoveredAmount,
+        })
+
+        const decoded = await this.rpc('decoderawtransaction', rawTx)
+
+        resolve(decoded)
       } catch (ex) {
         reject(ex)
       }
