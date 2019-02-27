@@ -41,7 +41,7 @@ export default class AdcClient {
         })
 
         console.log(inputData.uncoveredAmount)
-        if (inputData.amount <= 0) {
+        if (inputData.uncoveredAmount <= 0) {
           resolve(inputData)
         } else {
           let balance = validInputs.reduce((sum, input) => sum + input.amount, 0)
