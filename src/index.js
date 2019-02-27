@@ -53,7 +53,7 @@ export default class AdcClient {
 
         const rawTx = await this.rpc('createrawtransaction', inputData.inputsToUse, {
           [tx.to]: tx.amount,
-          [tx.from]: inputData.uncoveredAmount,
+          [tx.from]: inputData.uncoveredAmount * -1,
         })
 
         const decoded = await this.rpc('decoderawtransaction', rawTx)
