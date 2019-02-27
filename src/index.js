@@ -45,15 +45,16 @@ export default class AdcClient {
           let message = `Trying to send ${tx.amount + fee} from Address "${tx.from}" but it only has balance of ${balance}.`
           return reject(new Error(message))
         }
-        
-        console.log({
-          [tx.to]: tx.amount,
-          [tx.from]: inputData.uncoveredAmount,
-        })
 
+        const change = inputData.uncoveredAmount * -1
+        const changeOutput = change === 0 ? {} : {
+          [tx.from]: change
+        }
+        
+        console.log(changeOutput)
         const rawTx = await this.rpc('createrawtransaction', inputData.inputsToUse, {
+          ... changeOutput,
           [tx.to]: tx.amount,
-          [tx.from]: inputData.uncoveredAmount * -1,
         })
 
         const decoded = await this.rpc('decoderawtransaction', rawTx)
