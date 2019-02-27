@@ -30,7 +30,7 @@ export default (user, password) => {
         const res = await rawResponse.json()
     
         if (res.error) {
-          reject(new Error(`Server Error: ${res.error}`))
+          reject(res.error)
         } else {
           resolve(res.result)
         }

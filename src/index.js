@@ -17,5 +17,17 @@ export default class AdcClient {
   async getNewAddress() {
     return this.rpc('getnewaddress')
   }
+
+  async sendAdc(tx) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const transactions = this.rpc('listunspent').filter(t => t.address === t.from)
+
+        resolve(transactions)
+      } catch (ex) {
+        reject(ex)
+      }
+    })
+  }
 }
 
